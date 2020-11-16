@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mongo:
+    image: 'mongo:latest'
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/dist
+    environment:
+      - NODE_ENV=development
+      - MONGO_URL=mongodb://mongo:27017/plant-check-db
+      - MONGO_USER=mongouser
+      - MONGO_PASSWORD=mongopassword
+    ports:
+      - '8080:3000'
+    depends_on:
+      - mongo
