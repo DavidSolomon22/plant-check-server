@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseConfigService } from 'config';
-import { AppController } from './controllers';
-import { AppService } from './services';
+import { UserModule } from 'modules/user';
 
 @Module({
   imports: [
@@ -13,8 +12,9 @@ import { AppService } from './services';
       useClass: MongooseConfigService,
       inject: [ConfigService],
     }),
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, MongooseConfigService],
+  controllers: [],
+  providers: [MongooseConfigService],
 })
 export class AppModule {}

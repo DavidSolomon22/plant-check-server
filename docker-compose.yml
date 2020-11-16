@@ -2,6 +2,8 @@ version: '3'
 services:
   mongo:
     image: 'mongo:latest'
+    ports:
+      - '28017:27017'
   api:
     build:
       context: .
