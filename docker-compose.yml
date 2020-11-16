@@ -11,6 +11,7 @@ services:
       - /app/dist
     environment:
       - NODE_ENV=development
+      - PORT=3000
       - MONGO_URL=mongodb://mongo:27017/plant-check-db
       - MONGO_USER=mongouser
       - MONGO_PASSWORD=mongopassword
