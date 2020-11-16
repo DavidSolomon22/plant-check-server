@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Param,
   Patch,
@@ -17,8 +16,10 @@ import { UserRepository } from 'modules/user/repositories';
 import { UserUpdateDto } from 'modules/user/dtos';
 import { ParseSortParamsPipe } from 'pipes';
 import { UserService } from 'modules/user/services';
+import { JwtAuthGuard } from 'guards';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(
     private userRepository: UserRepository,

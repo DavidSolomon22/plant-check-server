@@ -11,9 +11,11 @@ services:
     volumes:
       - .:/app
       - /app/dist
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - PORT=3000
+      - JWT_SECRET=U68kT5rUQuVEKqDMqzbd
       - MONGO_URL=mongodb://mongo:27017/plant-check-db
       - MONGO_USER=mongouser
       - MONGO_PASSWORD=mongopassword

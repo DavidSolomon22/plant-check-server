@@ -18,12 +18,16 @@ export class UserService {
   ): Promise<PaginateResult<User>> {
     const { minAge, maxAge } = filterParams;
     const filterQuery = {
-      age: { $gte: minAge, $lte: maxAge },
+      // age: { $gte: minAge, $lte: maxAge },
     };
     return await this.userRepository.getPaginatedUsers(options, filterQuery);
   }
 
   async getOne(id: string): Promise<User> {
     return await this.userRepository.getUser(id);
+  }
+
+  async getOneByEmailWithHash(email: string): Promise<User> {
+    return await this.userRepository.getOneByEmailWithHash(email);
   }
 }
