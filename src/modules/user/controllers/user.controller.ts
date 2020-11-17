@@ -11,8 +11,8 @@ import {
   DefaultValuePipe,
   ParseArrayPipe,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
-import { UserRepository } from 'modules/user/repositories';
 import { UserUpdateDto } from 'modules/user/dtos';
 import { ParseSortParamsPipe } from 'pipes';
 import { UserService } from 'modules/user/services';
@@ -21,10 +21,7 @@ import { JwtAuthGuard } from 'guards';
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UserController {
-  constructor(
-    private userRepository: UserRepository,
-    private userService: UserService,
-  ) {}
+  constructor(private userService: UserService) {}
 
   @Get()
   async getUsers(
@@ -74,7 +71,7 @@ export class UserController {
       select: fields,
       populate: populates,
     };
-    const user = await this.userRepository.getUser(id, options);
+    const user = await this.userService.getUser(id, options);
     if (!user) {
       throw new NotFoundException();
     } else {
@@ -95,11 +92,7 @@ export class UserController {
       select: fields,
       populate: populates,
     };
-    const user = await this.userRepository.updateUser(
-      id,
-      userUpdateDto,
-      options,
-    );
+    const user = await this.userService.updateUser(id, userUpdateDto, options);
     if (!user) {
       throw new NotFoundException();
     } else {
@@ -108,12 +101,13 @@ export class UserController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
-    const user = await this.userRepository.deleteUser(id);
+    const user = await this.userService.deleteUser(id);
     if (!user) {
       throw new NotFoundException();
     } else {
-      return user;
+      return;
     }
   }
 }

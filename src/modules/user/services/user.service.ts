@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PaginateResult, PaginateOptions } from 'mongoose';
 import { User } from '../schemas';
 import { UserRepository } from 'modules/user/repositories';
-import { UserCreateDto, UserDto } from 'modules/user/dtos';
+import { UserCreateDto, UserDto, UserUpdateDto } from 'modules/user/dtos';
 
 @Injectable()
 export class UserService {
@@ -21,6 +21,22 @@ export class UserService {
       // age: { $gte: minAge, $lte: maxAge },
     };
     return await this.userRepository.getPaginatedUsers(options, filterQuery);
+  }
+
+  async getUser(id: string, options: PaginateOptions = {}): Promise<User> {
+    return await this.userRepository.getUser(id, options);
+  }
+
+  async updateUser(
+    id: string,
+    user: UserUpdateDto,
+    options: PaginateOptions,
+  ): Promise<User> {
+    return await this.userRepository.updateUser(id, user, options);
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    return await this.userRepository.deleteUser(id);
   }
 
   async getOne(id: string): Promise<User> {
