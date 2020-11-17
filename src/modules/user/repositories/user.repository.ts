@@ -13,11 +13,10 @@ export class UserRepository {
     private userModel: PaginateModel<User>,
   ) {}
 
-  async createUser(user: UserCreateDto): Promise<UserDto> {
-    const userForCreation = new this.userModel(user);
-    const createdUser = await userForCreation.save();
+  async createUser(user: UserCreateDto): Promise<User> {
+    const createdUser = await this.userModel.create(user);
     createdUser.passwordHash = undefined;
-    return await createdUser;
+    return createdUser;
   }
 
   // done

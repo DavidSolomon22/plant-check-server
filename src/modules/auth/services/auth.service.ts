@@ -46,11 +46,10 @@ export class AuthService {
     };
   }
 
-  async registerUser(user: RegisterDto): Promise<UserDto> {
+  async registerUser(user: RegisterDto): Promise<User> {
     const { password } = user;
     const passwordHash = await hash(password, 10);
-    let userForCreation = new UserCreateDto();
-    userForCreation = { ...user, passwordHash };
+    const userForCreation: UserCreateDto = { ...user, passwordHash };
     return await this.userService.createUser(userForCreation);
   }
 

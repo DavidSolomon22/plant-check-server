@@ -8,7 +8,7 @@ import { UserCreateDto, UserDto, UserUpdateDto } from 'modules/user/dtos';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async createUser(user: UserCreateDto): Promise<UserDto> {
+  async createUser(user: UserCreateDto): Promise<User> {
     return await this.userRepository.createUser(user);
   }
 

@@ -4,6 +4,7 @@ import { UserDto } from 'modules/user/dtos';
 import { RegisterDto } from 'modules/auth/dtos';
 import { AuthService } from 'modules/auth/services';
 import { LocalAuthGuard } from 'guards';
+import { plainToClass } from 'class-transformer';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,11 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<UserDto> {
-    return await this.authService.registerUser(registerDto);
+    const user = await this.authService.registerUser(registerDto);
+    const userDto = plainToClass(UserDto, user.toObject(), {
+      enableImplicitConversion: true,
+    });
+    return userDto;
   }
 
   @UseGuards(LocalAuthGuard)

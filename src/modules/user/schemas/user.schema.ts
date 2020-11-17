@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Exclude, Expose } from 'class-transformer/decorators';
 import { Document } from 'mongoose';
 
 @Schema()
