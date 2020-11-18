@@ -13,8 +13,8 @@ export class UserService {
   }
 
   async getPaginatedUsers(
-    options: PaginateOptions,
-    filterParams: any,
+    options: PaginateOptions = {},
+    filterParams: any = {},
   ): Promise<PaginateResult<User>> {
     const { minAge, maxAge } = filterParams;
     const filterQuery = {
@@ -30,17 +30,13 @@ export class UserService {
   async updateUser(
     id: string,
     user: UserUpdateDto,
-    options: PaginateOptions,
+    options: PaginateOptions = {},
   ): Promise<User> {
     return await this.userRepository.updateUser(id, user, options);
   }
 
   async deleteUser(id: string): Promise<User> {
     return await this.userRepository.deleteUser(id);
-  }
-
-  async getOne(id: string): Promise<User> {
-    return await this.userRepository.getUser(id);
   }
 
   async getOneByEmailWithHash(email: string): Promise<User> {

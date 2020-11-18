@@ -2,7 +2,7 @@ import { PaginateModel, PaginateResult, PaginateOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schemas';
-import { UserCreateDto, UserDto } from '../dtos';
+import { UserCreateDto } from '../dtos';
 import { UserUpdateDto } from '../dtos/user-update.dto';
 import { FilterQuery } from 'mongoose';
 
@@ -19,14 +19,13 @@ export class UserRepository {
     return createdUser;
   }
 
-  // done
   async getAllUsers(): Promise<User[]> {
     return await this.userModel.find().exec();
   }
 
   // ogarnac populate + parsowanie populate pipe, zeby mozna bylo tworzyc obiekty (dla zagniezdzonych pol)
   async getPaginatedUsers(
-    options: PaginateOptions,
+    options: PaginateOptions = {},
     filterQuery: FilterQuery<User> = {},
   ): Promise<PaginateResult<User>> {
     return await this.userModel.paginate(filterQuery, options);
@@ -50,7 +49,7 @@ export class UserRepository {
   async updateUser(
     id: string,
     user: UserUpdateDto,
-    options: PaginateOptions,
+    options: PaginateOptions = {},
   ): Promise<User> {
     const { select, populate } = options;
     let { lean } = options;
@@ -68,7 +67,6 @@ export class UserRepository {
       .lean(lean);
   }
 
-  // done
   async deleteUser(id: string): Promise<User> {
     return await this.userModel.findByIdAndDelete(id);
   }
