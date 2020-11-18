@@ -32,6 +32,15 @@
 $ npm install
 ```
 
+## Docker
+```bash
+# development
+$ docker-compose up
+
+# e2e tests
+$ docker-compose -f docker-compose.test.yml -p server-test up
+```
+
 ## Running the app
 
 ```bash

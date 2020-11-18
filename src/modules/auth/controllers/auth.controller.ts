@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Req, UseGuards, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UseGuards,
+  Res,
+  Get,
+} from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UserDto } from 'modules/user/dtos';
 import { RegisterDto } from 'modules/auth/dtos';
@@ -9,6 +17,11 @@ import { plainToClass } from 'class-transformer';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get()
+  async test() {
+    return 'test';
+  }
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<UserDto> {
