@@ -15,7 +15,7 @@ export class UserRepository {
 
   async createUser(user: UserCreateDto): Promise<User> {
     const createdUser = await this.userModel.create(user);
-    createdUser.passwordHash = undefined;
+    delete createdUser.passwordHash;
     return createdUser;
   }
 

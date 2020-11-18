@@ -1,9 +1,5 @@
 version: '3'
 services:
-  mongo-test:
-    image: 'mongo:latest'
-    ports:
-      - '29017:27017'
   api:
     build:
       context: .
@@ -16,9 +12,6 @@ services:
       - NODE_ENV=test
       - PORT=3000
       - JWT_SECRET=U68kT5rUQuVEKqDMqzbd
-      - MONGO_URL=mongodb://mongo-test:27017/plant-check-test-db
     ports:
       - '9080:3000'
-    depends_on:
-      - mongo-test
-    command: npm run test:watch
+    command: npm run test:e2e:watch
