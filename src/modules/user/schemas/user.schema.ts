@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude, Expose } from 'class-transformer/decorators';
 import { Document } from 'mongoose';
 
 @Schema()
@@ -19,12 +18,12 @@ export class User extends Document {
   @Prop({
     required: false,
   })
-  firstName: string;
+  firstName?: string;
 
   @Prop({
     required: false,
   })
-  surname: string;
+  surname?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
