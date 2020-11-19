@@ -6,15 +6,14 @@ import {
   closeInMongodConnection,
   rootMongooseTestModule,
 } from 'utils/testing-utils';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'modules/user/schemas';
-import { AppModule } from 'modules/app';
 import { UserModule } from 'modules/user';
 import { AuthModule } from 'modules/auth';
+import { UtilsService } from 'utils/services';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
   let server: any;
+  let authCookies: string;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,25 +26,22 @@ describe('UserController (e2e)', () => {
         }),
         UserModule,
         AuthModule,
-        // MongooseModule.forFeatureAsync([
-        //   {
-        //     name: User.name,
-        //     useFactory: () => {
-        //       const schema = UserSchema;
-        //       schema.plugin(require('mongoose-paginate-v2'));
-        //       schema.plugin(require('mongoose-unique-validator'), {
-        //         message: 'User with email {VALUE} already exists.',
-        //       });
-        //       return schema;
-        //     },
-        //   },
-        // ]),
       ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    server = await app.listen(3000);
+    server = app.getHttpServer();
+
+    await request(server).post('/auth/register').send({
+      email: 'dav.soli22@gmail.com',
+      password: 'enter123',
+    });
+    const response = await request(server).post('/auth/login').send({
+      email: 'dav.soli22@gmail.com',
+      password: 'enter123',
+    });
+    authCookies = UtilsService.extractCookiesFromHeaders(response.headers);
   });
 
   afterAll(async () => {
@@ -54,7 +50,9 @@ describe('UserController (e2e)', () => {
   });
 
   it('/users (GET)', async () => {
-    console.log('url :>> ', await app.getUrl());
-    return request(server).get('/users').expect(200);
+    return request(server)
+      .get('/users')
+      .set('Cookie', [authCookies])
+      .expect(200);
   });
 });
