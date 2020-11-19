@@ -43,7 +43,7 @@ $ docker-compose up
 $ docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
 ```
 
-For unit tests change `command` property in `docker-compose.test.yml` file for
+For **unit tests** change `command` property in `docker-compose.test.yml` file for
 ```bash
 command: npm run test:watch
 ```
@@ -53,7 +53,7 @@ And run command
 $ docker-compose -f docker-compose.test.yml -p server_test up
 ```
 
-For e2e tests change `command` property in `docker-compose.test.yml` file for
+For **e2e tests** change `command` property in `docker-compose.test.yml` file for
 ```bash
 command: npm run test:e2e:watch
 ```
