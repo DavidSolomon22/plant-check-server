@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PaginateResult, PaginateOptions } from 'mongoose';
 import { User } from '../schemas';
 import { UserRepository } from 'modules/user/repositories';
-import { UserCreateDto, UserDto, UserUpdateDto } from 'modules/user/dtos';
+import { UserCreateDto, UserUpdateDto } from 'modules/user/dtos';
 
 @Injectable()
 export class UserService {

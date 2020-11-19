@@ -19,10 +19,6 @@ export class UserRepository {
     return createdUser;
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.userModel.find().exec();
-  }
-
   // ogarnac populate + parsowanie populate pipe, zeby mozna bylo tworzyc obiekty (dla zagniezdzonych pol)
   async getPaginatedUsers(
     options: PaginateOptions = {},
