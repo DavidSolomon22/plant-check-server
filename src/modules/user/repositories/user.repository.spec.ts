@@ -60,7 +60,7 @@ describe('UserRepository', () => {
       surname: 'Giroud',
     });
 
-    expect(createdUser).toEqual(mockUser as User);
+    expect(createdUser).toStrictEqual(mockUser as User);
     expect(createdUser.passwordHash).toBeUndefined();
   });
 });

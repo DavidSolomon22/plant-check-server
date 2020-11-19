@@ -40,12 +40,12 @@ $ docker-compose up
 # unit tests
 command: npm run test:watch
 
-$ docker-compose -f docker-compose.test.yml -p server-test up
+$ docker-compose -f docker-compose.test.yml -p server_test up
 
 # e2e tests
 command: npm run test:e2e:watch
 
-$ docker-compose -f docker-compose.test.yml -p server-test up
+$ docker-compose -f docker-compose.test.yml -p server_test up
 ```
 
 ## Running the app
