@@ -10,7 +10,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - .:/app
-      - /app/dist
       - /app/node_modules
     environment:
       - NODE_ENV=development

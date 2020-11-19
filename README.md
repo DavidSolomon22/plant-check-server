@@ -36,16 +36,36 @@ $ npm install
 ```bash
 # development
 $ docker-compose up
+```
 
-# unit tests
+```bash
+# debug (Visual Studio Code)
+$ docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
+```
+
+For unit tests change `command` property in `docker-compose.test.yml` file for
+```bash
 command: npm run test:watch
-
+```
+And run command
+```bash
+# unit tests
 $ docker-compose -f docker-compose.test.yml -p server_test up
+```
 
-# e2e tests
+For e2e tests change `command` property in `docker-compose.test.yml` file for
+```bash
 command: npm run test:e2e:watch
-
+```
+And run the same command as for unit tests
+```bash
+# e2e tests
 $ docker-compose -f docker-compose.test.yml -p server_test up
+```
+
+After adding new npm packages, run this command to launch all containers
+```bash
+docker-compose up --build -V
 ```
 
 ## Running the app
