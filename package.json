@@ -75,6 +75,7 @@
       "json",
       "ts"
     ],
+    "rootDir": "./src",
     "moduleDirectories": [
       "node_modules",
       "<rootDir>"
