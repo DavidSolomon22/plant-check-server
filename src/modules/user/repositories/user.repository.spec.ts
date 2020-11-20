@@ -172,7 +172,7 @@ describe('UserRepository', () => {
       const mockedDeleteResponse: any = {
         _id: 'some id',
         email: 'oli@gmail.com',
-        firstName: 'Olivier-Changed',
+        firstName: 'Olivier',
         surname: 'Giroud',
         __v: 0,
       };
@@ -185,6 +185,26 @@ describe('UserRepository', () => {
   });
 
   describe('getOneByEmailWithHash', () => {
-    it('', async () => {});
+    it('should get user with passwordHash', async () => {
+      const mockedUser: any = {
+        _id: 'some id',
+        email: 'oli@gmail.com',
+        firstName: 'Olivier',
+        surname: 'Giroud',
+        passwordHash: 'some passwordHash',
+      };
+      jest.spyOn(model, 'findOne').mockReturnValueOnce(
+        createMock<DocumentQuery<User, User, unknown>>({
+          select: () => ({
+            lean: () => ({
+              exec: jest.fn().mockResolvedValueOnce(mockedUser),
+            }),
+          }),
+        }),
+      );
+      const user = await repository.getOneByEmailWithHash('oli@gmail.com');
+      expect(user.passwordHash).toBeDefined();
+      expect(user).toStrictEqual(mockedUser);
+    });
   });
 });
