@@ -6,8 +6,8 @@ before_install:
   - docker build -t solaris22/plant-check-server-test -f ./Dockerfile.dev .
 
 script:
-  - docker run -e CI=true -e NODE_ENV=test -e PORT=3000 -e JWT_SECRET=U68kT5rUQuVEKqDMqzbd solaris22/plant-check-server-test npm test
-  - docker run -e CI=true -e NODE_ENV=test -e PORT=3000 -e JWT_SECRET=U68kT5rUQuVEKqDMqzbd solaris22/plant-check-server-test npm test:e2e
+  - docker run -e CI=true -e NODE_ENV=test -e PORT=3000 -e JWT_SECRET=U68kT5rUQuVEKqDMqzbd solaris22/plant-check-server-test npm run test
+  - docker run -e CI=true -e NODE_ENV=test -e PORT=3000 -e JWT_SECRET=U68kT5rUQuVEKqDMqzbd solaris22/plant-check-server-test npm run test:e2e
 
 after_success:
   - docker build -t solaris22/plant-check-server .
