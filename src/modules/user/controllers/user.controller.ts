@@ -26,24 +26,24 @@ export class UserController {
   @Get()
   async getUsers(
     @Query('pageNumber', new DefaultValuePipe(1), ParseIntPipe)
-    pageNumber: number,
+    pageNumber?: number,
     @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe)
-    pageSize: number,
+    pageSize?: number,
     @Query('fields', new DefaultValuePipe([]), ParseArrayPipe)
-    fields: string[],
+    fields?: string[],
     @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
-    populates: string[], // check on real populate
+    populates?: string[], // check on real populate
     @Query(
       'orderBy',
       new DefaultValuePipe([]),
       ParseArrayPipe,
       new ParseSortParamsPipe(),
     )
-    orderBy: string,
+    orderBy?: string,
     @Query('minAge', new DefaultValuePipe(0), ParseIntPipe)
-    minAge: number,
+    minAge?: number,
     @Query('maxAge', new DefaultValuePipe(1000), ParseIntPipe)
-    maxAge: number,
+    maxAge?: number,
   ) {
     const options = {
       page: pageNumber,
@@ -63,9 +63,9 @@ export class UserController {
   async getUser(
     @Param('id') id: string,
     @Query('fields', new DefaultValuePipe([]), ParseArrayPipe)
-    fields: string[],
+    fields?: string[],
     @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
-    populates: string[], // check on real populate
+    populates?: string[], // check on real populate
   ) {
     const options = {
       select: fields,
@@ -82,11 +82,11 @@ export class UserController {
   @Patch(':id')
   async updateUser(
     @Param('id') id: string,
-    @Query('fields', new DefaultValuePipe([]), ParseArrayPipe)
-    fields: string[],
-    @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
-    populates: string[], // check on real populate
     @Body() userUpdateDto: UserUpdateDto,
+    @Query('fields', new DefaultValuePipe([]), ParseArrayPipe)
+    fields?: string[],
+    @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
+    populates?: string[], // check on real populate
   ) {
     const options = {
       select: fields,
