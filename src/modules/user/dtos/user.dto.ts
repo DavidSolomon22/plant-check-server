@@ -12,9 +12,9 @@ export class UserDto {
 
   @IsString()
   @Expose()
-  firstName: string;
+  firstName?: string;
 
   @IsString()
   @Expose()
-  surname: string;
+  surname?: string;
 }
