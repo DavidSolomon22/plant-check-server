@@ -13,10 +13,11 @@ import {
   UseGuards,
   HttpCode,
 } from '@nestjs/common';
-import { UserUpdateDto } from 'modules/user/dtos';
+import { UserDto, UserUpdateDto } from 'modules/user/dtos';
 import { ParseSortParamsPipe } from 'pipes';
 import { UserService } from 'modules/user/services';
 import { JwtAuthGuard } from 'guards';
+import { PaginateResult } from 'mongoose';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -44,7 +45,7 @@ export class UserController {
     minAge?: number,
     @Query('maxAge', new DefaultValuePipe(1000), ParseIntPipe)
     maxAge?: number,
-  ) {
+  ): Promise<PaginateResult<UserDto>> {
     const options = {
       page: pageNumber,
       limit: pageSize,
@@ -66,7 +67,7 @@ export class UserController {
     fields?: string[],
     @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
     populates?: string[], // check on real populate
-  ) {
+  ): Promise<UserDto> {
     const options = {
       select: fields,
       populate: populates,
@@ -87,7 +88,7 @@ export class UserController {
     fields?: string[],
     @Query('populates', new DefaultValuePipe([]), ParseArrayPipe)
     populates?: string[], // check on real populate
-  ) {
+  ): Promise<UserDto> {
     const options = {
       select: fields,
       populate: populates,
@@ -102,7 +103,7 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  async deleteUser(@Param('id') id: string) {
+  async deleteUser(@Param('id') id: string): Promise<any> {
     const user = await this.userService.deleteUser(id);
     if (!user) {
       throw new NotFoundException();
