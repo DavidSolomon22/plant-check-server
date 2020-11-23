@@ -12,7 +12,9 @@ import { validationPipeConfig } from 'config';
 declare const module: any;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'debug', 'log', 'verbose', 'warn'],
+  });
   app.useGlobalFilters(
     new MongoExceptionFilter(),
     new MongooseExceptionFilter(),
