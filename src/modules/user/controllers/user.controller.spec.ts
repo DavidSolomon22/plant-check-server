@@ -7,6 +7,7 @@ import { createMock } from '@golevelup/ts-jest';
 import { User } from 'modules/user/schemas';
 import { UserController } from '.';
 import { AuthService } from 'modules/auth/services';
+import { NotFoundException } from '@nestjs/common';
 
 const mockedPaginatedUsers: PaginateResult<any> = {
   docs: [
@@ -93,17 +94,75 @@ describe('UserController', () => {
   });
 
   describe('getUser', () => {
-    it('should return one user', async () => {});
-    it('should throw error when user not found', async () => {});
+    it('should return one user', async () => {
+      const userMock = createMock<User>({
+        email: 'some email',
+        firstName: 'Olivier',
+        surname: 'Giroud',
+      });
+      userMock._id = 'some id';
+      const getUserSpy = jest
+        .spyOn(service, 'getUser')
+        .mockResolvedValueOnce(userMock);
+      const response = await controller.getUser('some id');
+      expect(response).toBe(userMock);
+      expect(getUserSpy).toBeCalledWith('some id', {});
+    });
+    it('should throw NotFoundException when user not found', async () => {
+      const id = 'some unknown id';
+      jest.spyOn(service, 'getUser').mockResolvedValueOnce(null);
+      expect(controller.getUser(id)).rejects.toThrowError(NotFoundException);
+    });
   });
 
   describe('updateUser', () => {
-    it('should return one updated user', async () => {});
-    it('should throw error when user not found', async () => {});
+    it('should return one updated user', async () => {
+      const userMock = createMock<UserUpdateDto>({
+        firstName: 'Olivier',
+        surname: 'Giroud',
+      });
+      const id = 'some id';
+      jest.spyOn(service, 'updateUser').mockResolvedValueOnce({
+        _id: id,
+        ...userMock,
+      } as User);
+      const response = await controller.updateUser(id, userMock);
+      expect(response).toStrictEqual({
+        _id: id,
+        ...userMock,
+      });
+    });
+    it('should throw NotFoundException when user not found', async () => {
+      const id = 'some unknown id';
+      const userMock = createMock<UserUpdateDto>({
+        firstName: 'Olivier',
+        surname: 'Giroud',
+      });
+      jest.spyOn(service, 'updateUser').mockResolvedValueOnce(null);
+      expect(controller.updateUser(id, userMock)).rejects.toThrowError(
+        NotFoundException,
+      );
+    });
   });
 
   describe('deleteUser', () => {
-    it('should return one deleted user', async () => {});
-    it('should throw error when user not found', async () => {});
+    it('should return undefined', async () => {
+      const userMock = createMock<User>({
+        email: 'some email',
+      });
+      userMock._id = 'some id';
+      const deleteUserSpy = jest
+        .spyOn(service, 'deleteUser')
+        .mockResolvedValueOnce(userMock);
+      const response = await controller.deleteUser(userMock._id);
+      expect(response).toBeUndefined();
+      expect(deleteUserSpy).toHaveBeenCalledWith(userMock._id);
+      expect(deleteUserSpy).toHaveReturnedWith<User>(userMock);
+    });
+    it('should throw NotFoundException when user not found', async () => {
+      const id = 'some unknown id';
+      jest.spyOn(service, 'deleteUser').mockResolvedValueOnce(null);
+      expect(controller.deleteUser(id)).rejects.toThrowError(NotFoundException);
+    });
   });
 });

@@ -165,7 +165,7 @@ describe('UserService', () => {
   describe('getUser', () => {
     it('should return one user', async () => {
       const userMock = createMock<User>({
-        email: 'some id',
+        email: 'some email',
         firstName: 'Olivier',
         surname: 'Giroud',
       });
