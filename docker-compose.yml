@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mongo:
+    image: 'mongo:latest'
+    ports:
+      - '28017:27017'
+    volumes:
+      - /data/db
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    ports:
+      - '8080:3000'
+  auth-microservice:
+    build:
+      context: ./auth-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./auth-microservice:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGO_URL=mongodb://mongo:27017/auth-db
+    ports:
+      - '8081:3000'
+    depends_on:
+      - mongo
