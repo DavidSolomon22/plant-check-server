@@ -34,3 +34,19 @@ services:
       - '8081:3000'
     depends_on:
       - mongo
+  plant-predictions-microservice:
+    build:
+      context: ./plant-predictions-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./plant-predictions-microservice:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - JWT_SECRET=U68kT5rUQuVEKqDMqzbd
+      - MONGO_URL=mongodb://mongo:27017/plant-predictions-db
+    ports:
+      - '8082:3000'
+    depends_on:
+      - mongo
