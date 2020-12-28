@@ -6,7 +6,7 @@ export class PlantPredictions extends Document {
   @Prop({
     required: true,
   })
-  example: string;
+  docs: string;
 }
 
 export const PlantPredictionsSchema = SchemaFactory.createForClass(

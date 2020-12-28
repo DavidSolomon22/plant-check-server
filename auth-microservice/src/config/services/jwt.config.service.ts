@@ -9,6 +9,9 @@ export class JwtConfigService implements JwtOptionsFactory {
   createJwtOptions(): JwtModuleOptions {
     return {
       secret: this.configService.get<string>('JWT_SECRET'),
+      signOptions: {
+        issuer: this.configService.get<string>('JWT_ISS'),
+      },
     };
   }
 }

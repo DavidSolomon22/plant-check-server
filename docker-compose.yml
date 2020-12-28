@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   mongo:
     image: 'mongo:latest'
@@ -6,6 +7,7 @@ services:
       - '28017:27017'
     volumes:
       - /data/db
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -18,6 +20,7 @@ services:
       - PORT=3000
     ports:
       - '8080:3000'
+
   auth-microservice:
     build:
       context: ./auth-microservice
@@ -28,12 +31,14 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
-      - JWT_SECRET=U68kT5rUQuVEKqDMqzbd
+      - JWT_SECRET=c4VJW6YavdKjhi10ltjF5UTd9utI8qb4
+      - JWT_ISS=HkHlwlpvDmdcXdWRNIzzF9KkPD2BCwNv
       - MONGO_URL=mongodb://mongo:27017/auth-db
     ports:
       - '8081:3000'
     depends_on:
       - mongo
+
   plant-predictions-microservice:
     build:
       context: ./plant-predictions-microservice
@@ -44,10 +49,120 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
-      - JWT_SECRET=U68kT5rUQuVEKqDMqzbd
+      - JWT_SECRET=c4VJW6YavdKjhi10ltjF5UTd9utI8qb4
+      - JWT_ISS=HkHlwlpvDmdcXdWRNIzzF9KkPD2BCwNv
       - MONGO_URL=mongodb://mongo:27017/plant-predictions-db
       - MULTER_DEST=./upload
     ports:
       - '8082:3000'
     depends_on:
       - mongo
+
+  kong-migrations:
+    image: '${KONG_DOCKER_TAG:-kong:latest}'
+    command: kong migrations bootstrap
+    depends_on:
+      - db
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
+      KONG_PG_HOST: db
+      KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PG_PASSWORD_FILE: /run/secrets/kong_postgres_password
+    secrets:
+      - kong_postgres_password
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  kong-migrations-up:
+    image: '${KONG_DOCKER_TAG:-kong:latest}'
+    command: kong migrations up && kong migrations finish
+    depends_on:
+      - db
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
+      KONG_PG_HOST: db
+      KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PG_PASSWORD_FILE: /run/secrets/kong_postgres_password
+    secrets:
+      - kong_postgres_password
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  kong:
+    image: '${KONG_DOCKER_TAG:-kong:latest}'
+    user: '${KONG_USER:-kong}'
+    depends_on:
+      - db
+    environment:
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
+      KONG_CASSANDRA_CONTACT_POINTS: db
+      KONG_DATABASE: postgres
+      KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
+      KONG_PG_HOST: db
+      KONG_PG_USER: ${KONG_PG_USER:-kong}
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_PG_PASSWORD_FILE: /run/secrets/kong_postgres_password
+    secrets:
+      - kong_postgres_password
+    ports:
+      - '8000:8000/tcp'
+      - '127.0.0.1:8001:8001/tcp'
+      - '8443:8443/tcp'
+      - '127.0.0.1:8444:8444/tcp'
+    healthcheck:
+      test: ['CMD', 'kong', 'health']
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  db:
+    image: postgres:9.5
+    environment:
+      POSTGRES_DB: ${KONG_PG_DATABASE:-kong}
+      POSTGRES_USER: ${KONG_PG_USER:-kong}
+      POSTGRES_PASSWORD_FILE: /run/secrets/kong_postgres_password
+    secrets:
+      - kong_postgres_password
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', '${KONG_PG_USER:-kong}']
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+    stdin_open: true
+    tty: true
+    volumes:
+      - kong_data:/var/lib/postgresql/data
+
+  konga:
+    image: pantsel/konga
+    ports:
+      - 1337:1337
+    links:
+      - kong:kong
+    container_name: konga
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  kong_data: {}
+
+secrets:
+  kong_postgres_password:
+    file: ./POSTGRES_PASSWORD

@@ -16,6 +16,7 @@ export class MulterUtilsService {
     file: Express.Multer.File,
     callback: (error: Error | null, acceptFile: boolean) => void,
   ): void {
+    console.log('file :>> ', file);
     callback(null, true);
   }
 
