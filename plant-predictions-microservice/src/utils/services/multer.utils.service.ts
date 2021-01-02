@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { diskStorage, StorageEngine } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
 
 export class MulterUtilsService {
   private static imageFolderPath = './media';
@@ -16,7 +17,6 @@ export class MulterUtilsService {
     file: Express.Multer.File,
     callback: (error: Error | null, acceptFile: boolean) => void,
   ): void {
-    console.log('file :>> ', file);
     callback(null, true);
   }
 
@@ -25,7 +25,8 @@ export class MulterUtilsService {
     file: Express.Multer.File,
     callback: (error: Error | null, filename: string) => void,
   ): void {
-    const name = file.originalname.split('.')[0];
-    callback(null, `${name}.jpg`);
+    const name = uuidv4();
+    const extension = file.originalname.split('.')[1];
+    callback(null, `${name}.${extension}`);
   }
 }

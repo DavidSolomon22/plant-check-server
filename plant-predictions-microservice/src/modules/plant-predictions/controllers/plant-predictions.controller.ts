@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -12,6 +13,8 @@ import { PlantPredictionsService } from '../services';
 import { Express, Response } from 'express';
 import { PlantPredictions } from '../schemas';
 import { MulterUtilsService } from 'utils/services';
+import { FileFieldRequiredException } from 'exceptions';
+import { PlantPredictionCreateDto } from '../dtos';
 
 @Controller()
 export class PlantPredictionsController {
@@ -26,12 +29,17 @@ export class PlantPredictionsController {
   )
   async createPlantPrediction(
     @Param('userId') userId: string,
+    @Body() plantPredictionCreateDto: PlantPredictionCreateDto,
     @UploadedFile() plantPhoto: Express.Multer.File,
-  ): Promise<PlantPredictions> {
+  ): Promise<any> {
     if (!plantPhoto) {
-      console.log('throw error, that plantPhoto is required');
+      throw new FileFieldRequiredException('plantPhoto');
     }
-    return null;
+    return this.plantPredictionsService.createPlantPrediction(
+      userId,
+      plantPredictionCreateDto,
+      plantPhoto,
+    );
   }
 
   @Get('users/:userId/plants-predictions')
@@ -50,11 +58,11 @@ export class PlantPredictionsController {
     // return this.plantPredictionsService.getPlantPredictions(userId);
   }
 
-  @Get('images/:imagePath')
+  @Get('photos/:photoPath')
   async getPlantPhoto(
-    @Param('imagePath') imagePath: string,
+    @Param('photoPath') photoPath: string,
     @Res() res: Response,
   ) {
-    return res.sendFile(imagePath, { root: './media' });
+    return res.sendFile(photoPath, { root: './media' });
   }
 }
