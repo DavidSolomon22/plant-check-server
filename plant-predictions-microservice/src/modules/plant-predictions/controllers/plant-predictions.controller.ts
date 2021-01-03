@@ -14,7 +14,7 @@ import { Express, Response } from 'express';
 import { PlantPredictions } from '../schemas';
 import { MulterUtilsService } from 'utils/services';
 import { FileFieldRequiredException } from 'exceptions';
-import { PlantPredictionCreateDto } from '../dtos';
+import { PlantPredictionCreateDto, PlantPredictionDto } from '../dtos';
 
 @Controller()
 export class PlantPredictionsController {
@@ -31,7 +31,7 @@ export class PlantPredictionsController {
     @Param('userId') userId: string,
     @Body() plantPredictionCreateDto: PlantPredictionCreateDto,
     @UploadedFile() plantPhoto: Express.Multer.File,
-  ): Promise<any> {
+  ): Promise<PlantPredictionDto> {
     if (!plantPhoto) {
       throw new FileFieldRequiredException('plantPhoto');
     }
@@ -43,26 +43,28 @@ export class PlantPredictionsController {
   }
 
   @Get('users/:userId/plants-predictions')
-  async getPlantPredictions(
+  async getUserPlantPredictions(
     @Param('userId') userId: string,
   ): Promise<PlantPredictions> {
-    return this.plantPredictionsService.getPlantPredictions(userId);
+    return this.plantPredictionsService.getUserPlantPredictions(userId);
   }
 
   @Get('users/:userId/plants-predictions/:plantPredictionId')
-  async getPlantPrediction(
+  async getUserSinglePlantPrediction(
     @Param('userId') userId: string,
     @Param('plantPredictionId') plantPredictionId: string,
-  ): Promise<string> {
-    return 'getPlantPrediction';
-    // return this.plantPredictionsService.getPlantPredictions(userId);
+  ): Promise<PlantPredictionDto> {
+    return this.plantPredictionsService.getUserSinglePlantPrediction(
+      userId,
+      plantPredictionId,
+    );
   }
 
   @Get('photos/:photoPath')
   async getPlantPhoto(
     @Param('photoPath') photoPath: string,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return res.sendFile(photoPath, { root: './media' });
   }
 }

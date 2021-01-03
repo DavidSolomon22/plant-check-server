@@ -34,7 +34,24 @@ export class PlantPredictionsRepository {
     });
   }
 
-  async getPlantPredictions(id: string): Promise<PlantPredictions> {
-    return this.plantPredictionsModel.findById(id);
+  async getUserPlantPredictions(userId: string): Promise<PlantPredictions> {
+    return this.plantPredictionsModel.findOne({ userId: userId });
+  }
+
+  async getUserSinglePlantPrediction(
+    userId: string,
+    plantPredictionId: string,
+  ): Promise<PlantPredictions> {
+    return this.plantPredictionsModel
+      .findOne(
+        {
+          userId: userId,
+          'predictions._id': plantPredictionId,
+        },
+        {
+          'predictions.$': 1,
+        },
+      )
+      .select('predictions -_id');
   }
 }

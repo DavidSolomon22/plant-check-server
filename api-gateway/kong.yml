@@ -1,0 +1,30 @@
+_format_version: '1.1'
+
+services:
+  - host: plant-predictions-microservice
+    name: plant-predictions-microservice
+    port: 3000
+    protocol: http
+    path: /
+    plugins:
+      - name: jwt
+        config:
+          claims_to_verify:
+            - exp
+    routes:
+      - name: Test
+        hosts:
+          - localhost
+        paths:
+          - /users/\w+/plants-predictions
+          - /photos/\w+.\w+
+        strip_path: false
+
+consumers:
+  - username: plant-check-mobile
+
+jwt_secrets:
+  - consumer: plant-check-mobile
+    key: HkHlwlpvDmdcXdWRNIzzF9KkPD2BCwNv
+    algorithm: HS256
+    secret: c4VJW6YavdKjhi10ltjF5UTd9utI8qb4

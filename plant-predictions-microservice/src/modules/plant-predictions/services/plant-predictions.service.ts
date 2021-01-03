@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PlantPredictionCreateDto, PlantPredictionDto } from '../dtos';
 import { PlantPredictionForCreation } from '../interfaces';
 import { PlantPredictionsRepository } from '../repositories';
@@ -43,7 +43,34 @@ export class PlantPredictionsService {
     return plantPredictionDto;
   }
 
-  async getPlantPredictions(id: string): Promise<PlantPredictions> {
-    return await this.plantPredictionsRepository.getPlantPredictions(id);
+  async getUserPlantPredictions(userId: string): Promise<PlantPredictions> {
+    return this.plantPredictionsRepository.getUserPlantPredictions(userId);
+  }
+
+  async getUserSinglePlantPrediction(
+    userId: string,
+    plantPredictionId: string,
+  ): Promise<PlantPredictionDto> {
+    const userSinglePlantPrediction = await this.plantPredictionsRepository.getUserSinglePlantPrediction(
+      userId,
+      plantPredictionId,
+    );
+    if (userSinglePlantPrediction?.predictions?.length === 1) {
+      const {
+        _id,
+        photoPath,
+        predictedPlantName,
+        timestamp,
+      } = userSinglePlantPrediction.predictions[0];
+      const plantPredictionDto: PlantPredictionDto = {
+        _id,
+        photoPath,
+        predictedPlantName,
+        timestamp,
+      };
+      return plantPredictionDto;
+    } else {
+      throw new NotFoundException();
+    }
   }
 }
