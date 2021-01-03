@@ -10,8 +10,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto): Promise<any> {
-    return await this.authService.registerUser(registerDto);
+  async register(@Body() registerDto: RegisterDto): Promise<void> {
+    await this.authService.registerUser(registerDto);
   }
 
   @UseGuards(LocalAuthGuard)

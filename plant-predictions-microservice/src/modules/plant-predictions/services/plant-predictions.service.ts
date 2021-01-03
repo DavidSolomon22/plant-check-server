@@ -44,7 +44,14 @@ export class PlantPredictionsService {
   }
 
   async getUserPlantPredictions(userId: string): Promise<PlantPredictions> {
-    return this.plantPredictionsRepository.getUserPlantPredictions(userId);
+    const userPlantPredictions = await this.plantPredictionsRepository.getUserPlantPredictions(
+      userId,
+    );
+    if (userPlantPredictions) {
+      return userPlantPredictions;
+    } else {
+      throw new NotFoundException();
+    }
   }
 
   async getUserSinglePlantPrediction(
