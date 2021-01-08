@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -11,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterUtilsService } from 'utils/services';
 import { PlantInfoCreateDto } from '../dtos';
 import { PlantInfoService } from '../services';
-import { Express } from 'express';
+import { Express, Response } from 'express';
 import { FileFieldRequiredException } from 'exceptions';
 
 @Controller()
@@ -57,5 +58,14 @@ export class PlantInfoController {
       plantName,
       plantPhoto,
     );
+  }
+
+  @Get('plant-infos/:plantName/photos/:photoPath')
+  async getPlantPhotoForDetails(
+    @Param('plantName') plantName: string,
+    @Param('photoPath') photoPath: string,
+    @Res() res: Response,
+  ): Promise<any> {
+    return res.sendFile(photoPath, { root: './media' });
   }
 }
