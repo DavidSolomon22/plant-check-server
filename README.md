@@ -10,6 +10,11 @@
 $ docker-compose up
 ```
 
+```bash
+# development - admin mode
+$ docker-compose -f docker-compose.yml -f docker-compose.admin.yml up
+```
+
 ## System architecture
 
 ![Alt text](docs/system-architecture.png?raw=true "System architecture")

@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  konga:
+    image: pantsel/konga
+    ports:
+      - 1337:1337
+    environment:
+      - NODE_ENV=development

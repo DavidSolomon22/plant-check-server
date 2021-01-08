@@ -20,6 +20,24 @@ services:
           - /photos/\w+.\w+
         strip_path: false
 
+  - host: plant-info-microservice
+    name: plant-info-microservice
+    port: 3000
+    protocol: http
+    path: /
+    plugins:
+      - name: jwt
+        config:
+          claims_to_verify:
+            - exp
+    routes:
+      - name: plant-info
+        hosts:
+          - localhost
+        paths:
+          - /plants-info
+        strip_path: false
+
 consumers:
   - username: plant-check-mobile
 

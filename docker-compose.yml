@@ -28,13 +28,6 @@ services:
       restart_policy:
         condition: on-failure
 
-  konga:
-    image: pantsel/konga
-    ports:
-      - 1337:1337
-    environment:
-      - NODE_ENV=development
-
   mongo:
     image: 'mongo:latest'
     ports:
@@ -76,5 +69,24 @@ services:
       - MULTER_DEST=./upload
     ports:
       - '8082:3000'
+    depends_on:
+      - mongo
+
+  plant-info-microservice:
+    build:
+      context: ./plant-info-microservice
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./plant-info-microservice:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - JWT_SECRET=c4VJW6YavdKjhi10ltjF5UTd9utI8qb4
+      - JWT_ISS=HkHlwlpvDmdcXdWRNIzzF9KkPD2BCwNv
+      - MONGO_URL=mongodb://mongo:27017/plant-info-db
+      - MULTER_DEST=./upload
+    ports:
+      - '8083:3000'
     depends_on:
       - mongo
