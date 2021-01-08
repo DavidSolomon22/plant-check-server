@@ -2,25 +2,25 @@
 import { HttpModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PlantInfoController } from './controllers';
-// import { PlantPredictionsRepository } from './repositories';
-// import { PlantPredictions, PlantPredictionsSchema } from './schemas';
-// import { PlantPredictionsService } from './services';
+import { PlantInfoRepository } from './repositories';
+import { PlantInfo, PlantInfoSchema } from './schemas';
+import { PlantInfoService } from './services';
 
 @Module({
   imports: [
     HttpModule,
-    // MongooseModule.forFeatureAsync([
-    //   {
-    //     name: PlantPredictions.name,
-    //     useFactory: () => {
-    //       const schema = PlantPredictionsSchema;
-    //       return schema;
-    //     },
-    //   },
-    // ]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: PlantInfo.name,
+        useFactory: () => {
+          const schema = PlantInfoSchema;
+          return schema;
+        },
+      },
+    ]),
   ],
   controllers: [PlantInfoController],
   exports: [],
-  // providers: [PlantPredictionsRepository, PlantPredictionsService],
+  providers: [PlantInfoRepository, PlantInfoService],
 })
 export class PlantInfoModule {}
