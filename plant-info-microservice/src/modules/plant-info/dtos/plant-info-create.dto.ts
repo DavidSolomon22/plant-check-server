@@ -6,4 +6,11 @@ export class PlantInfoCreateDto {
     potSize: string;
     fertalizer: string;
   };
+  plantDetails: {
+    sun: string;
+    water: string;
+    potSize: string;
+    fertalizer: string;
+    photoPaths: string[];
+  };
 }

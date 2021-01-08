@@ -9,12 +9,23 @@ export class PlantInfoService {
     return this.plantInfoRepository.createPlantInfo(plantInfo);
   }
 
-  async getPlantOverview(plantName: string): Promise<any> {
-    const plantOverview = await this.plantInfoRepository.getPlantOverview(
+  async getPlantOverviewInfo(plantName: string): Promise<any> {
+    const plantInfo = await this.plantInfoRepository.getPlantOverviewInfo(
       plantName,
     );
-    if (plantOverview?.plantOverview) {
-      return plantOverview.plantOverview;
+    if (plantInfo?.plantOverview) {
+      return plantInfo.plantOverview;
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  async getPlantDetailInfo(plantName: string): Promise<any> {
+    const plantInfo = await this.plantInfoRepository.getPlantDetailInfo(
+      plantName,
+    );
+    if (plantInfo?.plantDetails) {
+      return plantInfo.plantDetails;
     } else {
       throw new NotFoundException();
     }

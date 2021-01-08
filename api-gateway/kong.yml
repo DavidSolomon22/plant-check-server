@@ -35,7 +35,7 @@ services:
         hosts:
           - localhost
         paths:
-          - /plants-info
+          - /plant-infos
         strip_path: false
 
 consumers:

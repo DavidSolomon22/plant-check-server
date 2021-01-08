@@ -17,8 +17,8 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  private accessTokenExpTime = '5m';
-  private refreshTokenExpTime = '8h';
+  private accessTokenExpTime = '1h';
+  private refreshTokenExpTime = '7d';
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.getOneByEmailWithHash(email);

@@ -6,21 +6,24 @@ import { PlantInfoService } from '../services';
 export class PlantInfoController {
   constructor(private plantInfoService: PlantInfoService) {}
 
-  @Post('plants-info')
+  @Post('plant-infos')
   async createPlantInfo(
     @Body() plantInfoCreateDto: PlantInfoCreateDto,
+  ): Promise<void> {
+    await this.plantInfoService.createPlantInfo(plantInfoCreateDto);
+  }
+
+  @Get('plant-infos/:plantName/overview')
+  async getPlantOverviewInfo(
+    @Param('plantName') plantName: string,
   ): Promise<any> {
-    return this.plantInfoService.createPlantInfo(plantInfoCreateDto);
+    return this.plantInfoService.getPlantOverviewInfo(plantName);
   }
 
-  @Get('plants-info/:plantName/overview')
-  async getPlantOverview(@Param('plantName') plantName: string): Promise<any> {
-    return this.plantInfoService.getPlantOverview(plantName);
+  @Get('plant-infos/:plantName/details')
+  async getPlantDetailInfo(
+    @Param('plantName') plantName: string,
+  ): Promise<any> {
+    return this.plantInfoService.getPlantDetailInfo(plantName);
   }
-
-  // @Get('plants-info/:plantName/details')
-  // async getPlantDetails(@Param('plantName') plantName: string): Promise<any> {
-  //   console.log('plantName :>> ', plantName);
-  //   return 'getPlantDetails';
-  // }
 }

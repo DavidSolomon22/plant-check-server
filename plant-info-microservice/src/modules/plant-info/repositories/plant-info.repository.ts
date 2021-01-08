@@ -14,9 +14,15 @@ export class PlantInfoRepository {
     return this.plantInfoModel.create(plantInfo);
   }
 
-  async getPlantOverview(plantName: string): Promise<PlantInfo> {
+  async getPlantOverviewInfo(plantName: string): Promise<PlantInfo> {
     return this.plantInfoModel
       .findOne({ plantName: plantName })
       .select('plantOverview');
+  }
+
+  async getPlantDetailInfo(plantName: string): Promise<PlantInfo> {
+    return this.plantInfoModel
+      .findOne({ plantName: plantName })
+      .select('plantDetails');
   }
 }

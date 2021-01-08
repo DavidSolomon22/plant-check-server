@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema({
   versionKey: false,
+  _id: false,
 })
 export class PlantOverview extends Document {
   @Prop({
@@ -33,6 +34,7 @@ const PlantOverviewSchema = SchemaFactory.createForClass(PlantOverview);
 
 @Schema({
   versionKey: false,
+  _id: false,
 })
 export class PlantDetails extends Document {
   @Prop({
@@ -69,6 +71,7 @@ const PlantDetailsSchema = SchemaFactory.createForClass(PlantDetails);
 
 @Schema({
   versionKey: false,
+  collection: 'plant-info',
 })
 export class PlantInfo extends Document {
   @Prop({
@@ -85,7 +88,7 @@ export class PlantInfo extends Document {
 
   @Prop({
     type: PlantDetailsSchema,
-    required: false,
+    required: true,
   })
   plantDetails: PlantDetails;
 }
