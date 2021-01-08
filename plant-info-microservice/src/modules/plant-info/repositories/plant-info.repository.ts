@@ -25,4 +25,15 @@ export class PlantInfoRepository {
       .findOne({ plantName: plantName })
       .select('plantDetails');
   }
+
+  async addPhotoPathToPlantDetails(
+    plantName: string,
+    photoPath: string,
+  ): Promise<PlantInfo> {
+    return this.plantInfoModel.findOneAndUpdate(
+      { plantName: plantName },
+      { $push: { 'plantDetails.photoPaths': photoPath } },
+      { new: true, runValidators: true, context: 'query' },
+    );
+  }
 }

@@ -1,6 +1,18 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MulterUtilsService } from 'utils/services';
 import { PlantInfoCreateDto } from '../dtos';
 import { PlantInfoService } from '../services';
+import { Express } from 'express';
+import { FileFieldRequiredException } from 'exceptions';
 
 @Controller()
 export class PlantInfoController {
@@ -25,5 +37,25 @@ export class PlantInfoController {
     @Param('plantName') plantName: string,
   ): Promise<any> {
     return this.plantInfoService.getPlantDetailInfo(plantName);
+  }
+
+  @Post('plant-infos/:plantName/photos')
+  @UseInterceptors(
+    FileInterceptor('plantPhoto', {
+      storage: MulterUtilsService.plantPhotoDiskStorage(),
+      fileFilter: MulterUtilsService.plantPhotoFileFilter,
+    }),
+  )
+  async uploadPhotoForPlantDetails(
+    @Param('plantName') plantName: string,
+    @UploadedFile() plantPhoto: Express.Multer.File,
+  ): Promise<void> {
+    if (!plantPhoto) {
+      throw new FileFieldRequiredException('plantPhoto');
+    }
+    await this.plantInfoService.uploadPhotoForPlantDetails(
+      plantName,
+      plantPhoto,
+    );
   }
 }
