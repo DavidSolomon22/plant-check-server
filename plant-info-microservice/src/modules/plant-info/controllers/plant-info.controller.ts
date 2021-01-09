@@ -20,10 +20,10 @@ import { FileFieldRequiredException } from 'exceptions';
 export class PlantInfoController {
   constructor(private plantInfoService: PlantInfoService) {}
 
-  @Post('log')
-  async log(@Req() req: Request, @Res() res: Response): Promise<void> {
-    console.log('req.body.request :>> ', req.body.request);
-  }
+  // @Post('log')
+  // async log(@Req() req: Request, @Res() res: Response): Promise<void> {
+  //   console.log('req.body.request :>> ', req.body.request);
+  // }
 
   @Post('plant-infos')
   async createPlantInfo(
