@@ -33,7 +33,7 @@ services:
     ports:
       - '28017:27017'
     volumes:
-      - /data/db
+      - ./data:/data/db
 
   auth-microservice:
     build:
