@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -12,12 +13,17 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterUtilsService } from 'utils/services';
 import { PlantInfoCreateDto } from '../dtos';
 import { PlantInfoService } from '../services';
-import { Express, Response } from 'express';
+import { Express, Response, Request } from 'express';
 import { FileFieldRequiredException } from 'exceptions';
 
 @Controller()
 export class PlantInfoController {
   constructor(private plantInfoService: PlantInfoService) {}
+
+  @Post('log')
+  async log(@Req() req: Request, @Res() res: Response): Promise<void> {
+    console.log('req.body.request :>> ', req.body.request);
+  }
 
   @Post('plant-infos')
   async createPlantInfo(
