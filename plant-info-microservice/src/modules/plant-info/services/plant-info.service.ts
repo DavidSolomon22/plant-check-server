@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ArrayLengthLimitException } from 'exceptions';
 import { PlantInfoRepository } from '../repositories';
-import { PlantDetails } from '../schemas';
+import { PlantDetails, PlantInfo, PlantOverview } from '../schemas';
 
 @Injectable()
 export class PlantInfoService {
   constructor(private plantInfoRepository: PlantInfoRepository) {}
 
-  async createPlantInfo(plantInfo: any): Promise<any> {
+  async createPlantInfo(plantInfo: any): Promise<PlantInfo> {
     return this.plantInfoRepository.createPlantInfo(plantInfo);
   }
 
-  async getPlantOverviewInfo(plantName: string): Promise<any> {
+  async getPlantOverviewInfo(plantName: string): Promise<PlantOverview> {
     const plantInfo = await this.plantInfoRepository.getPlantOverviewInfo(
       plantName,
     );
@@ -36,7 +36,7 @@ export class PlantInfoService {
   async uploadPhotoForPlantDetails(
     plantName: string,
     plantPhoto: Express.Multer.File,
-  ): Promise<any> {
+  ): Promise<PlantInfo> {
     const plantDetails = await this.getPlantDetailInfo(plantName);
     if (plantDetails.photoPaths.length >= 4) {
       throw new ArrayLengthLimitException('photoPaths', 4);

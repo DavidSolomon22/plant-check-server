@@ -1,18 +1,45 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
-class PlantOverviewCreateDto {
+export class PlantOverviewCreateDto {
+  @IsNotEmpty()
+  @IsString()
   sun: string;
+
+  @IsNotEmpty()
+  @IsString()
   water: string;
+
+  @IsNotEmpty()
+  @IsString()
   potSize: string;
+
+  @IsNotEmpty()
+  @IsString()
   fertalizer: string;
 }
 
-class PlantDetailsCreateDto {
+export class PlantDetailsCreateDto {
+  @IsNotEmpty()
+  @IsString()
   sun: string;
+
+  @IsNotEmpty()
+  @IsString()
   water: string;
+
+  @IsNotEmpty()
+  @IsString()
   potSize: string;
+
+  @IsNotEmpty()
+  @IsString()
   fertalizer: string;
-  photoPaths: string[];
 }
 
 export class PlantInfoCreateDto {
@@ -21,8 +48,14 @@ export class PlantInfoCreateDto {
   plantName: string;
 
   @IsNotEmpty()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PlantOverviewCreateDto)
   plantOverview: PlantOverviewCreateDto;
 
   @IsNotEmpty()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PlantDetailsCreateDto)
   plantDetails: PlantDetailsCreateDto;
 }

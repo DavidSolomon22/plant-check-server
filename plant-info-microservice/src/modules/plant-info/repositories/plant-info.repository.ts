@@ -10,7 +10,7 @@ export class PlantInfoRepository {
     private plantInfoModel: Model<PlantInfo>,
   ) {}
 
-  async createPlantInfo(plantInfo: any): Promise<any> {
+  async createPlantInfo(plantInfo: any): Promise<PlantInfo> {
     return this.plantInfoModel.create(plantInfo);
   }
 

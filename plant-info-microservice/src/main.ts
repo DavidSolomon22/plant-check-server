@@ -1,6 +1,6 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { validationPipeConfig } from 'config';
 import { AppModule } from 'modules/app';
 import { MongoExceptionFilter, MongooseExceptionFilter } from './filters';
@@ -9,6 +9,9 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const reflector = app.get(Reflector);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT');
 
   app.useGlobalFilters(
     new MongoExceptionFilter(),
@@ -17,8 +20,12 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
 
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT');
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(reflector, {
+      strategy: 'excludeAll',
+    }),
+  );
+
   await app.listen(port);
 
   if (module.hot) {

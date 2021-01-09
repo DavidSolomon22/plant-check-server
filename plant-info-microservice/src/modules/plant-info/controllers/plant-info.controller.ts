@@ -4,16 +4,16 @@ import {
   Get,
   Param,
   Post,
-  Req,
   Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterUtilsService } from 'utils/services';
-import { PlantInfoCreateDto } from '../dtos';
+import { toDTO } from 'utils/mapper';
+import { PlantDetailsDto, PlantInfoCreateDto, PlantOverviewDto } from '../dtos';
 import { PlantInfoService } from '../services';
-import { Express, Response, Request } from 'express';
+import { Express, Response } from 'express';
 import { FileFieldRequiredException } from 'exceptions';
 
 @Controller()
@@ -35,15 +35,21 @@ export class PlantInfoController {
   @Get('plant-infos/:plantName/overview')
   async getPlantOverviewInfo(
     @Param('plantName') plantName: string,
-  ): Promise<any> {
-    return this.plantInfoService.getPlantOverviewInfo(plantName);
+  ): Promise<PlantOverviewDto> {
+    const plantOverview = await this.plantInfoService.getPlantOverviewInfo(
+      plantName,
+    );
+    return toDTO(PlantOverviewDto, plantOverview);
   }
 
   @Get('plant-infos/:plantName/details')
   async getPlantDetailInfo(
     @Param('plantName') plantName: string,
-  ): Promise<any> {
-    return this.plantInfoService.getPlantDetailInfo(plantName);
+  ): Promise<PlantDetailsDto> {
+    const plantDetails = await this.plantInfoService.getPlantDetailInfo(
+      plantName,
+    );
+    return toDTO(PlantDetailsDto, plantDetails);
   }
 
   @Post('plant-infos/:plantName/photos')
@@ -71,7 +77,7 @@ export class PlantInfoController {
     @Param('plantName') plantName: string,
     @Param('photoPath') photoPath: string,
     @Res() res: Response,
-  ): Promise<any> {
+  ): Promise<void> {
     return res.sendFile(photoPath, { root: './media' });
   }
 }
