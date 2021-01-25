@@ -10,6 +10,6 @@ export class PlantOverviewDto {
   @Expose()
   potSize: string;
 
-  // @Expose()
+  @Expose()
   fertalizer: string;
 }
